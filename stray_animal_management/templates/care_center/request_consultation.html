@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+
+{% block title %}Request Consultation{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="content-card">
+            <h2 class="mb-4">
+                <i class="fas fa-stethoscope text-info"></i> Request Veterinary Consultation
+            </h2>
+            
+            <div class="card mb-4">
+                <div class="card-body">
+                    <h4>Animal Details</h4>
+                    <p><strong>Type:</strong> {{ animal.animal_type }}</p>
+                    <p><strong>Location:</strong> {{ animal.location }}</p>
+                    <p><strong>Description:</strong> {{ animal.description }}</p>
+                    <p><strong>Status:</strong> <span class="badge bg-info">{{ animal.status }}</span></p>
+                </div>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label class="form-label">Select Veterinarian *</label>
+                    {{ form.veterinarian }}
+                    {% if form.veterinarian.errors %}
+                        <div class="text-danger">{{ form.veterinarian.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Consultation Description *</label>
+                    {{ form.request_description }}
+                    {% if form.request_description.errors %}
+                        <div class="text-danger">{{ form.request_description.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-info btn-lg">Submit Request</button>
+                    <a href="{% url 'care_center_dashboard' %}" class="btn btn-secondary">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

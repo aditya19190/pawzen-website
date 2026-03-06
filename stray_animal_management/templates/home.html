@@ -1,0 +1,289 @@
+{% extends 'base.html' %}
+{% block title %}PawZen - Caring for Every Stray{% endblock %}
+
+{% block content %}
+
+<!-- Hero Section -->
+<div class="content-card text-center fade-in-up">
+    <i class="fas fa-paw fa-3x mb-3"
+       style="background:linear-gradient(135deg,#6366f1,#ec4899);
+              -webkit-background-clip:text;
+              -webkit-text-fill-color:transparent;"></i>
+    <h1 style="font-size:3rem;font-weight:800;
+               background:linear-gradient(135deg,#6366f1,#ec4899);
+               -webkit-background-clip:text;
+               -webkit-text-fill-color:transparent;">
+        Welcome to PawZen
+    </h1>
+    <p class="lead mt-3" style="color:#4b5563;font-size:1.3rem;">
+        Bringing Hope to Every Paw, One Animal at a Time
+    </p>
+    <p class="mt-2" style="color:#6b7280;max-width:700px;
+                           margin:0.5rem auto 0;">
+        A comprehensive platform connecting compassionate citizens,
+        dedicated care centers, and skilled veterinarians to rescue,
+        rehabilitate, and rehome stray animals across Kerala.
+    </p>
+</div>
+
+<!-- Module Cards -->
+<div class="row mt-2">
+
+    <!-- User Card -->
+    <div class="col-md-4 mb-4">
+        <div class="stat-card text-center h-100"
+             style="border-left-color:#6366f1;">
+            <div style="width:70px;height:70px;
+                        background:linear-gradient(135deg,#6366f1,#8b5cf6);
+                        border-radius:50%;
+                        display:flex;align-items:center;
+                        justify-content:center;
+                        margin:0 auto 1rem;
+                        box-shadow:0 8px 25px rgba(99,102,241,0.35);">
+                <i class="fas fa-user fa-2x text-white"></i>
+            </div>
+            <h4 style="font-weight:700;color:#1f2937;">For Citizens</h4>
+            <p style="color:#6b7280;margin:0.75rem 0;">
+                Report stray animals and help them find loving homes
+            </p>
+            <ul style="list-style:none;padding:0;
+                       text-align:left;color:#4b5563;
+                       margin-bottom:1.5rem;">
+                <li class="mb-1">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    Report Stray Animals
+                </li>
+                <li class="mb-1">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    Browse Adoptable Pets
+                </li>
+                <li class="mb-1">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    Request Vet Consultations
+                </li>
+                <li class="mb-1">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    Track Animal Status
+                </li>
+            </ul>
+            <div class="d-flex gap-2">
+                <a href="{% url 'user_login' %}"
+                   class="btn btn-custom btn-primary-custom flex-fill">
+                    <i class="fas fa-sign-in-alt me-1"></i>Login
+                </a>
+                <a href="{% url 'user_register' %}"
+                   class="btn btn-custom flex-fill"
+                   style="background:#e0e7ff;color:#6366f1;font-weight:600;">
+                    <i class="fas fa-user-plus me-1"></i>Register
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Care Center Card -->
+    <div class="col-md-4 mb-4">
+        <div class="stat-card text-center h-100"
+             style="border-left-color:#10b981;">
+            <div style="width:70px;height:70px;
+                        background:linear-gradient(135deg,#10b981,#059669);
+                        border-radius:50%;
+                        display:flex;align-items:center;
+                        justify-content:center;
+                        margin:0 auto 1rem;
+                        box-shadow:0 8px 25px rgba(16,185,129,0.35);">
+                <i class="fas fa-hospital fa-2x text-white"></i>
+            </div>
+            <h4 style="font-weight:700;color:#1f2937;">Care Centers</h4>
+            <p style="color:#6b7280;margin:0.75rem 0;">
+                Professional facilities providing shelter and care
+            </p>
+            <ul style="list-style:none;padding:0;
+                       text-align:left;color:#4b5563;
+                       margin-bottom:1.5rem;">
+                <li class="mb-1">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    Manage Rescued Animals
+                </li>
+                <li class="mb-1">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    Coordinate Vet Care
+                </li>
+                <li class="mb-1">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    Process Adoptions
+                </li>
+                <li class="mb-1">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    Track Recovery Progress
+                </li>
+            </ul>
+            <div class="d-flex gap-2">
+                <a href="{% url 'care_center_login' %}"
+                   class="btn btn-custom btn-success-custom flex-fill">
+                    <i class="fas fa-sign-in-alt me-1"></i>Login
+                </a>
+                <a href="{% url 'care_center_register' %}"
+                   class="btn btn-custom flex-fill"
+                   style="background:#d1fae5;color:#10b981;font-weight:600;">
+                    <i class="fas fa-user-plus me-1"></i>Register
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Veterinarian Card -->
+    <div class="col-md-4 mb-4">
+        <div class="stat-card text-center h-100"
+             style="border-left-color:#3b82f6;">
+            <div style="width:70px;height:70px;
+                        background:linear-gradient(135deg,#3b82f6,#2563eb);
+                        border-radius:50%;
+                        display:flex;align-items:center;
+                        justify-content:center;
+                        margin:0 auto 1rem;
+                        box-shadow:0 8px 25px rgba(59,130,246,0.35);">
+                <i class="fas fa-user-md fa-2x text-white"></i>
+            </div>
+            <h4 style="font-weight:700;color:#1f2937;">Veterinarians</h4>
+            <p style="color:#6b7280;margin:0.75rem 0;">
+                Licensed professionals providing medical expertise
+            </p>
+            <ul style="list-style:none;padding:0;
+                       text-align:left;color:#4b5563;
+                       margin-bottom:1.5rem;">
+                <li class="mb-1">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    Receive Consultation Requests
+                </li>
+                <li class="mb-1">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    Provide Treatment Plans
+                </li>
+                <li class="mb-1">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    Track Patient History
+                </li>
+                <li class="mb-1">
+                    <i class="fas fa-check-circle text-success me-2"></i>
+                    Issue Health Certificates
+                </li>
+            </ul>
+            <div class="d-flex gap-2">
+                <a href="{% url 'veterinarian_login' %}"
+                   class="btn btn-custom flex-fill"
+                   style="background:linear-gradient(135deg,#3b82f6,#2563eb);
+                          color:white;font-weight:600;">
+                    <i class="fas fa-sign-in-alt me-1"></i>Login
+                </a>
+                <a href="{% url 'veterinarian_register' %}"
+                   class="btn btn-custom flex-fill"
+                   style="background:#dbeafe;color:#3b82f6;font-weight:600;">
+                    <i class="fas fa-user-plus me-1"></i>Register
+                </a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- How It Works -->
+<div class="content-card mt-2 fade-in-up">
+    <h2 class="text-center mb-5"
+        style="font-weight:700;color:#1f2937;">
+        <i class="fas fa-cogs me-2"
+           style="color:#6366f1;"></i>How PawZen Works
+    </h2>
+    <div class="row text-center">
+        <div class="col-md-3 col-sm-6 mb-4">
+            <div style="width:80px;height:80px;
+                        background:linear-gradient(135deg,#f59e0b,#d97706);
+                        border-radius:50%;
+                        display:flex;align-items:center;
+                        justify-content:center;
+                        margin:0 auto 1rem;
+                        box-shadow:0 8px 25px rgba(245,158,11,0.35);">
+                <i class="fas fa-exclamation-triangle fa-2x text-white"></i>
+            </div>
+            <h5 style="font-weight:700;color:#1f2937;">1. Report</h5>
+            <p style="color:#6b7280;">
+                Citizens report stray animals through our easy-to-use platform
+            </p>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-4">
+            <div style="width:80px;height:80px;
+                        background:linear-gradient(135deg,#10b981,#059669);
+                        border-radius:50%;
+                        display:flex;align-items:center;
+                        justify-content:center;
+                        margin:0 auto 1rem;
+                        box-shadow:0 8px 25px rgba(16,185,129,0.35);">
+                <i class="fas fa-hands-helping fa-2x text-white"></i>
+            </div>
+            <h5 style="font-weight:700;color:#1f2937;">2. Rescue</h5>
+            <p style="color:#6b7280;">
+                Care centers respond and bring animals to safe facilities
+            </p>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-4">
+            <div style="width:80px;height:80px;
+                        background:linear-gradient(135deg,#3b82f6,#2563eb);
+                        border-radius:50%;
+                        display:flex;align-items:center;
+                        justify-content:center;
+                        margin:0 auto 1rem;
+                        box-shadow:0 8px 25px rgba(59,130,246,0.35);">
+                <i class="fas fa-stethoscope fa-2x text-white"></i>
+            </div>
+            <h5 style="font-weight:700;color:#1f2937;">3. Treat</h5>
+            <p style="color:#6b7280;">
+                Veterinarians provide medical care and rehabilitation
+            </p>
+        </div>
+        <div class="col-md-3 col-sm-6 mb-4">
+            <div style="width:80px;height:80px;
+                        background:linear-gradient(135deg,#ec4899,#db2777);
+                        border-radius:50%;
+                        display:flex;align-items:center;
+                        justify-content:center;
+                        margin:0 auto 1rem;
+                        box-shadow:0 8px 25px rgba(236,72,153,0.35);">
+                <i class="fas fa-home fa-2x text-white"></i>
+            </div>
+            <h5 style="font-weight:700;color:#1f2937;">4. Adopt</h5>
+            <p style="color:#6b7280;">
+                Healthy animals find loving forever homes
+            </p>
+        </div>
+    </div>
+</div>
+
+
+<!-- Call to Action -->
+<div class="content-card mt-2 fade-in-up text-center"
+     style="background:linear-gradient(135deg,#6366f1,#8b5cf6);
+            color:white;">
+    <h2 style="font-weight:700;">Join the PawZen Community</h2>
+    <p class="lead mt-2">
+        Together, we can make a difference in the lives of stray animals
+    </p>
+    <div class="mt-4 d-flex flex-wrap justify-content-center gap-3">
+        <a href="{% url 'user_register' %}"
+           class="btn btn-custom"
+           style="background:white;color:#6366f1;font-weight:700;">
+            <i class="fas fa-user-plus me-2"></i>Register as User
+        </a>
+        <a href="{% url 'care_center_register' %}"
+           class="btn btn-custom"
+           style="background:rgba(255,255,255,0.9);
+                  color:#10b981;font-weight:700;">
+            <i class="fas fa-hospital me-2"></i>Register Care Center
+        </a>
+        <a href="{% url 'veterinarian_register' %}"
+           class="btn btn-custom"
+           style="background:rgba(255,255,255,0.85);
+                  color:#3b82f6;font-weight:700;">
+            <i class="fas fa-user-md me-2"></i>Register as Vet
+        </a>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,44 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Account{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="content-card">
+            <h2 class="mb-4 text-danger">
+                <i class="fas fa-exclamation-triangle"></i> Delete Account
+            </h2>
+            
+            <div class="alert alert-danger">
+                <h5>Warning!</h5>
+                <p>Deleting your account will permanently remove:</p>
+                <ul>
+                    <li>Your veterinarian profile</li>
+                    <li>All consultation records</li>
+                    <li>Treatment history</li>
+                </ul>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-4">
+                    <p class="text-center"><strong>Dr. {{ user.veterinarian_name }}</strong></p>
+                    <p class="text-center">District: {{ user.district }}</p>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-danger btn-lg" 
+                            onclick="return confirm('Are you ABSOLUTELY sure?')">
+                        Delete Account
+                    </button>
+                    <a href="{% url 'veterinarian_dashboard' %}" class="btn btn-success">
+                        Keep Account
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

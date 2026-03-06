@@ -1,0 +1,75 @@
+{% extends 'base.html' %}
+
+{% block title %}Report Stray Animal{% endblock %}
+
+{% block content %}
+
+<nav class="breadcrumb-nav">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Report Animal</li>
+        </ol>
+    </div>
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="content-card">
+            <h2 class="mb-4">
+                <i class="fas fa-exclamation-triangle me-2" style="color:#f59e0b;"></i>
+                Report Stray Animal
+            </h2>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label class="form-label">Animal Type *</label>
+                    {{ form.animal_type }}
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">District *</label>
+                    {{ form.district }}
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Location *</label>
+                    {{ form.location }}
+                    <small class="text-muted d-block">Provide detailed location (street, landmark, area)</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Description *</label>
+                    {{ form.description }}
+                    <small class="text-muted d-block">Describe the animal's condition, behavior, and any visible injuries</small>
+                </div>
+                
+                <!-- ADD THIS IMAGE SECTION -->
+                <div class="mb-3">
+                    <label class="form-label">
+                        <i class="fas fa-camera me-2"></i>Animal Photo (Optional)
+                    </label>
+                    {{ form.reported_image }}
+                    <small class="text-muted d-block mt-1">
+                        <i class="fas fa-lightbulb me-1"></i>
+                        Upload a clear photo of the animal to help care centers identify it
+                    </small>
+                </div>
+                <!-- END IMAGE SECTION -->
+                
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-custom btn-warning btn-lg">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Report
+                    </button>
+                    <button type="button" onclick="goBackSafe()" class="btn btn-custom btn-lg" style="background:#e5e7eb;color:#4b5563;">
+                        <i class="fas fa-arrow-left me-2"></i>Back
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

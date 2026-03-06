@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Profile{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="content-card">
+            <h2 class="mb-4">
+                <i class="fas fa-user-edit"></i> Update Profile
+            </h2>
+            
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label class="form-label">Full Name *</label>
+                    {{ form.veterinarian_name }}
+                    {% if form.veterinarian_name.errors %}
+                        <div class="text-danger">{{ form.veterinarian_name.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Email *</label>
+                    {{ form.email }}
+                    {% if form.email.errors %}
+                        <div class="text-danger">{{ form.email.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Phone *</label>
+                    {{ form.phone }}
+                    {% if form.phone.errors %}
+                        <div class="text-danger">{{ form.phone.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Qualification *</label>
+                    {{ form.qualification }}
+                    {% if form.qualification.errors %}
+                        <div class="text-danger">{{ form.qualification.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Specialization *</label>
+                    {{ form.specialization }}
+                    {% if form.specialization.errors %}
+                        <div class="text-danger">{{ form.specialization.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Address *</label>
+                    {{ form.address }}
+                    {% if form.address.errors %}
+                        <div class="text-danger">{{ form.address.errors }}</div>
+                    {% endif %}
+                </div>
+                
+                <div class="alert alert-info">
+                    District and Registration Number cannot be changed.
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-primary btn-lg">Update Profile</button>
+                    <a href="{% url 'veterinarian_dashboard' %}" class="btn btn-secondary">Back</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

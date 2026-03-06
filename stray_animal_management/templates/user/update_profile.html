@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+
+{% block title %}Update Profile - PawZen{% endblock %}
+
+{% block content %}
+
+<nav class="breadcrumb-nav">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'user_dashboard' %}">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">Update Profile</li>
+        </ol>
+    </div>
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-md-8">
+        <div class="content-card">
+            <h2 class="mb-4">
+                <i class="fas fa-user-edit me-2" style="color:#6366f1;"></i>
+                Update Profile
+            </h2>
+            
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="mb-3">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-control" value="{{ user.username }}" disabled>
+                    <small class="text-muted">Username cannot be changed</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Email *</label>
+                    <input type="email" name="email" class="form-control" value="{{ user.email }}" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Phone *</label>
+                    <input type="text" name="phone" class="form-control" value="{{ user.phone }}" required>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">District *</label>
+                    <select name="district" class="form-select" required>
+                        <option value="Ernakulam" {% if user.district == 'Ernakulam' %}selected{% endif %}>Ernakulam</option>
+                        <option value="Thrissur" {% if user.district == 'Thrissur' %}selected{% endif %}>Thrissur</option>
+                    </select>
+                    <small class="text-success">You can change your district</small>
+                </div>
+                
+                <div class="mb-3">
+                    <label class="form-label">Address *</label>
+                    <textarea name="address" class="form-control" rows="3" required>{{ user.address }}</textarea>
+                </div>
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-custom btn-primary-custom btn-lg">
+                        <i class="fas fa-save me-2"></i>Update Profile
+                    </button>
+                    <button type="button" onclick="goBackSafe()" class="btn btn-custom btn-lg" style="background:#e5e7eb;color:#4b5563;">
+                        <i class="fas fa-arrow-left me-2"></i>Back
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

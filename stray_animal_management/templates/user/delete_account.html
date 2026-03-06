@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block title %}Delete Account{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="content-card">
+            <h2 class="mb-4 text-danger">
+                <i class="fas fa-exclamation-triangle"></i> Delete Account
+            </h2>
+            
+            <div class="alert alert-danger">
+                <h5>Warning!</h5>
+                <p>This action is <strong>irreversible</strong>. Deleting your account will:</p>
+                <ul>
+                    <li>Permanently delete your profile</li>
+                    <li>Remove all reported animals</li>
+                    <li>Cancel pending adoptions</li>
+                    <li>Delete consultation history</li>
+                </ul>
+            </div>
+            
+            <form method="post">
+                {% csrf_token %}
+                
+                <div class="d-grid gap-2">
+                    <button type="submit" class="btn btn-danger btn-lg" 
+                            onclick="return confirm('Are you ABSOLUTELY sure?')">
+                        Yes, Delete My Account
+                    </button>
+                    <a href="{% url 'user_dashboard' %}" class="btn btn-success">
+                        No, Keep My Account
+                    </a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

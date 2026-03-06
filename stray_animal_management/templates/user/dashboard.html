@@ -1,0 +1,211 @@
+{% extends 'base.html' %}
+
+{% block title %}User Dashboard - PawZen{% endblock %}
+
+{% block content %}
+
+<nav class="breadcrumb-nav">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active">
+                <i class="fas fa-th-large me-1"></i>User Dashboard
+            </li>
+        </ol>
+    </div>
+</nav>
+
+<div class="content-card fade-in-up">
+    <h2 class="mb-2">
+        <i class="fas fa-user-circle me-2" style="color:#6366f1;"></i>
+        Welcome, {{ user.username }}!
+    </h2>
+    <p class="lead mb-0">
+        District:
+        <span class="badge" style="background:linear-gradient(135deg,#6366f1,#8b5cf6);font-size:1rem;padding:0.5rem 1rem;">
+            {{ user.district }}
+        </span>
+    </p>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="stat-card text-center" style="border-left-color:#10b981;">
+            <h3 style="color:#10b981;font-weight:700;">{{ reported_animals.count }}</h3>
+            <p style="color:#6b7280;margin:0;">Animals Reported</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card text-center" style="border-left-color:#6366f1;">
+            <h3 style="color:#6366f1;font-weight:700;">{{ consultation_requests.count }}</h3>
+            <p style="color:#6b7280;margin:0;">Consultations</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card text-center" style="border-left-color:#ec4899;">
+            <h3 style="color:#ec4899;font-weight:700;">{{ adopted_animals.count }}</h3>
+            <p style="color:#6b7280;margin:0;">Adoption Requests</p>
+        </div>
+    </div>
+</div>
+
+<!-- Report Animal Button -->
+<div class="content-card mb-4">
+    <a href="{% url 'report_stray_animal' %}" class="btn btn-custom w-100 text-center"
+       style="background:linear-gradient(135deg,#f59e0b,#d97706);color:white;padding:2rem;border-radius:20px;text-decoration:none;display:block;">
+        <i class="fas fa-exclamation-triangle fa-3x d-block mb-3"></i>
+        <h4 style="color:white;font-weight:700;margin-bottom:0.5rem;">Report Stray Animal</h4>
+        <p class="mb-0" style="font-size:1.05rem;opacity:0.95;">Found a stray animal in need? Report it here</p>
+    </a>
+</div>
+
+<!-- My Reported Animals -->
+<div class="content-card mb-4" id="reported">
+    <h3 class="mb-3">
+        <i class="fas fa-clipboard-list me-2" style="color:#f59e0b;"></i>My Reported Animals
+        <button class="btn btn-sm btn-outline-primary float-end" type="button" data-bs-toggle="collapse" data-bs-target="#reportedCollapse">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+    </h3>
+    <div class="collapse show" id="reportedCollapse">
+        {% if reported_animals %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Animal Type</th>
+                        <th>Location</th>
+                        <th>Description</th>
+                        <th>Reported Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for animal in reported_animals %}
+                    <tr>
+                        <td><i class="fas fa-{% if animal.animal_type == 'Dog' %}dog{% else %}cat{% endif %} me-1"></i>{{ animal.animal_type }}</td>
+                        <td>{{ animal.location|truncatewords:8 }}</td>
+                        <td>{{ animal.description|truncatewords:15 }}</td>
+                        <td>{{ animal.reported_date|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>No animals reported yet. <a href="{% url 'report_stray_animal' %}">Report one now</a>
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Consultation History -->
+<div class="content-card mb-4" id="consultations">
+    <h3 class="mb-3">
+        <i class="fas fa-stethoscope me-2" style="color:#3b82f6;"></i>Consultation History
+        <button class="btn btn-sm btn-outline-primary float-end" type="button" data-bs-toggle="collapse" data-bs-target="#consultationsCollapse">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+    </h3>
+    <div class="collapse" id="consultationsCollapse">
+        {% if consultation_requests %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Animal</th>
+                        <th>Veterinarian</th>
+                        <th>Treatment Details</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for consultation in consultation_requests %}
+                    <tr>
+                        <td><i class="fas fa-{% if consultation.animal.animal_type == 'Dog' %}dog{% else %}cat{% endif %} me-1"></i>{{ consultation.animal.animal_type }}</td>
+                        <td>{% if consultation.veterinarian %}Dr. {{ consultation.veterinarian.veterinarian_name }}{% else %}<span class="text-muted">Not assigned</span>{% endif %}</td>
+                        <td>
+
+{% if consultation.consultation_status == "Completed" %}
+
+{{ consultation.treatment_details }}
+
+{% else %}
+
+<span class="text-muted">Waiting for treatment</span>
+
+{% endif %}
+
+</td>
+                        <td>
+                            {% if consultation.consultation_status == 'Pending' %}
+                            <span class="badge bg-warning">Pending</span>
+                            {% else %}
+                            <span class="badge bg-success">Completed</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ consultation.requested_date|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info"><i class="fas fa-info-circle me-2"></i>No consultations yet.</div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Adoption Requests -->
+<div class="content-card mb-4" id="adoptions">
+    <h3 class="mb-3">
+        <i class="fas fa-heart me-2" style="color:#ec4899;"></i>Adoption Requests
+        <button class="btn btn-sm btn-outline-primary float-end" type="button" data-bs-toggle="collapse" data-bs-target="#adoptionsCollapse">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+    </h3>
+    <div class="collapse" id="adoptionsCollapse">
+        {% if adopted_animals %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Animal</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for adoption in adopted_animals %}
+                    <tr>
+                        <td><i class="fas fa-{% if adoption.animal.animal_type == 'Dog' %}dog{% else %}cat{% endif %} me-1"></i>{{ adoption.animal.animal_type }}</td>
+                        <td>
+                            {% if adoption.adoption_status == 'Pending' %}
+                            <span class="badge bg-warning">Pending</span>
+                            {% elif adoption.adoption_status == 'Approved' %}
+                            <span class="badge bg-success">Approved</span>
+                            {% else %}
+                            <span class="badge bg-danger">Rejected</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ adoption.requested_date|date:"M d, Y" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info"><i class="fas fa-info-circle me-2"></i>No adoption requests. <a href="{% url 'view_adoption_animals' %}">Browse animals</a></div>
+        {% endif %}
+    </div>
+</div>
+
+<div class="content-card">
+    <h3 class="mb-3"><i class="fas fa-cog me-2" style="color:#6366f1;"></i>Account Settings</h3>
+    <a href="{% url 'delete_user_account' %}" class="btn btn-custom btn-danger-custom" 
+       onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+        <i class="fas fa-trash me-2"></i>Delete Account
+    </a>
+</div>
+
+{% endblock %}

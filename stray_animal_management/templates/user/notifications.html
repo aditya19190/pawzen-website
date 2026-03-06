@@ -1,0 +1,105 @@
+{% extends 'base.html' %}
+
+{% block title %}Notifications - PawZen{% endblock %}
+
+{% block content %}
+
+<nav class="breadcrumb-nav">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Notifications</li>
+        </ol>
+    </div>
+</nav>
+
+<div class="content-card">
+    <h2 class="mb-4">
+        <i class="fas fa-bell me-2" style="color:#6366f1;"></i>Notifications
+    </h2>
+
+    <!-- Animal Rescue Notifications -->
+    {% if animal_notifications %}
+    <h4 class="mt-4 mb-3">
+        <i class="fas fa-paw me-2" style="color:#10b981;"></i>Animal Rescue Updates
+    </h4>
+    {% for animal in animal_notifications %}
+    <div class="alert alert-success mb-3" style="border-left:5px solid #10b981;">
+        <h5><i class="fas fa-check-circle me-2"></i>Animal Rescued!</h5>
+        <p class="mb-2">
+            Your reported <strong>{{ animal.animal_type }}</strong> has been taken into care.
+        </p>
+        <hr>
+        <h6><i class="fas fa-hospital me-2"></i>Care Center Details:</h6>
+        <p class="mb-1"><strong>Name:</strong> {{ animal.taken_by_care_center.care_center_name }}</p>
+        <p class="mb-1"><strong>Phone:</strong> {{ animal.taken_by_care_center.phone }}</p>
+        <p class="mb-1"><strong>Address:</strong> {{ animal.taken_by_care_center.address }}</p>
+        <p class="mb-1"><strong>Location:</strong> {{ animal.location|truncatewords:20 }}</p>
+        <p class="mb-1">
+            <strong>Current Status:</strong> 
+            {% if animal.status == 'Under Care' %}
+            <span class="badge bg-info">Under Care</span>
+            {% elif animal.status == 'Healthy' %}
+            <span class="badge bg-success">Healthy - Ready for Adoption</span>
+            {% endif %}
+        </p>
+        <small class="text-muted">Updated: {{ animal.updated_at|date:"M d, Y - g:i A" }}</small>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- Adoption Request Notifications -->
+    {% if adoption_notifications %}
+    <h4 class="mt-4 mb-3">
+        <i class="fas fa-heart me-2" style="color:#ec4899;"></i>Adoption Request Updates
+    </h4>
+    {% for adoption in adoption_notifications %}
+    <div class="alert {% if adoption.adoption_status == 'Approved' %}alert-success{% else %}alert-warning{% endif %} mb-3" 
+         style="border-left:5px solid {% if adoption.adoption_status == 'Approved' %}#10b981{% else %}#f59e0b{% endif %};">
+        <h5>
+            <i class="fas fa-{% if adoption.adoption_status == 'Approved' %}check-circle{% else %}times-circle{% endif %} me-2"></i>
+            Adoption Request {% if adoption.adoption_status == 'Approved' %}Approved{% else %}Rejected{% endif %}
+        </h5>
+        <p class="mb-2">
+            Your adoption request for <strong>{{ adoption.animal.animal_type }}</strong> has been 
+            <strong>{% if adoption.adoption_status == 'Approved' %}approved{% else %}rejected{% endif %}</strong>.
+        </p>
+        
+        {% if adoption.adoption_status == 'Approved' %}
+        <hr>
+        <h6><i class="fas fa-hospital me-2"></i>Care Center Contact:</h6>
+        <p class="mb-1"><strong>Name:</strong> {{ adoption.animal.taken_by_care_center.care_center_name }}</p>
+        <p class="mb-1"><strong>Phone:</strong> {{ adoption.animal.taken_by_care_center.phone }}</p>
+        <p class="mb-1"><strong>Email:</strong> {{ adoption.animal.taken_by_care_center.email }}</p>
+        <p class="mb-1"><strong>Address:</strong> {{ adoption.animal.taken_by_care_center.address }}</p>
+        <p class="mt-2" style="color:#059669;">
+            <i class="fas fa-info-circle me-1"></i>
+            <strong>Please contact the care center to arrange pickup of your new pet!</strong>
+        </p>
+        {% else %}
+        <p class="mt-2 text-muted">
+            The care center has decided not to proceed with this adoption at this time. 
+            You can browse other animals available for adoption.
+        </p>
+        {% endif %}
+        
+        <small class="text-muted">Updated: {{ adoption.updated_at|date:"M d, Y - g:i A" }}</small>
+    </div>
+    {% endfor %}
+    {% endif %}
+
+    <!-- No Notifications -->
+    {% if not animal_notifications and not adoption_notifications %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>No new notifications.
+    </div>
+    {% endif %}
+
+    <div class="mt-4">
+        <button type="button" onclick="goBackSafe()" class="btn btn-custom btn-primary-custom">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </button>
+    </div>
+</div>
+
+{% endblock %}

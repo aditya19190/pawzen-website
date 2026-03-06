@@ -1,0 +1,84 @@
+{% extends 'base.html' %}
+
+{% block title %}Manage Adoption Requests - PawZen{% endblock %}
+
+{% block content %}
+
+<nav class="breadcrumb-nav">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'care_center_dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Manage Adoption Requests</li>
+        </ol>
+    </div>
+</nav>
+
+<div class="content-card">
+    <h2 class="mb-4">
+        <i class="fas fa-heart me-2" style="color:#ec4899;"></i>Manage Adoption Requests
+    </h2>
+
+    {% if adoption_requests %}
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Animal</th>
+                    <th>Adopter</th>
+                    <th>Contact</th>
+                    <th>Status</th>
+                    <th>Date</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for adoption in adoption_requests %}
+                <tr>
+                    <td><i class="fas fa-{% if adoption.animal.animal_type == 'Dog' %}dog{% else %}cat{% endif %} me-1"></i>{{ adoption.animal.animal_type }}</td>
+                    <td>{{ adoption.adopter.username }}</td>
+                    <td>
+                        <small>{{ adoption.adopter.phone }}<br>{{ adoption.adopter.email }}</small>
+                    </td>
+                    <td>
+                        {% if adoption.adoption_status == 'Pending' %}
+                        <span class="badge bg-warning">Pending</span>
+                        {% elif adoption.adoption_status == 'Approved' %}
+                        <span class="badge bg-success">Approved</span>
+                        {% else %}
+                        <span class="badge bg-danger">Rejected</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ adoption.requested_date|date:"M d, Y" }}</td>
+                    <td>
+                        {% if adoption.adoption_status == 'Pending' %}
+                        <a href="{% url 'approve_adoption' adoption.id %}" class="btn btn-sm btn-success"
+                           onclick="return confirm('Approve this adoption request?');">
+                            <i class="fas fa-check me-1"></i>Approve
+                        </a>
+                        <a href="{% url 'reject_adoption' adoption.id %}" class="btn btn-sm btn-danger"
+                           onclick="return confirm('Reject this adoption request?');">
+                            <i class="fas fa-times me-1"></i>Reject
+                        </a>
+                        {% else %}
+                        <span class="text-muted">Processed</span>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>No adoption requests yet.
+    </div>
+    {% endif %}
+
+    <div class="mt-4">
+        <button type="button" onclick="goBackSafe()" class="btn btn-custom" style="background:#e5e7eb;color:#4b5563;">
+            <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </button>
+    </div>
+</div>
+
+{% endblock %}

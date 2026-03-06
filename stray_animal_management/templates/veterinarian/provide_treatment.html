@@ -1,0 +1,304 @@
+{% extends 'base.html' %}
+
+{% block title %}Provide Treatment - PawZen{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb -->
+<nav class="breadcrumb-nav">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'home' %}">
+                    <i class="fas fa-home me-1"></i>Home
+                </a>
+            </li>
+            <li class="breadcrumb-item">
+                <a href="{% url 'veterinarian_dashboard' %}">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">Provide Treatment</li>
+        </ol>
+    </div>
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-lg-10">
+        <div class="content-card">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <h2 class="mb-0">
+                    <i class="fas fa-stethoscope me-2"
+                       style="color:#3b82f6;"></i>
+                    Medical Consultation
+                </h2>
+                <span class="badge bg-{% if consultation.consultation_status == 'Pending' %}warning{% else %}success{% endif %}"
+                      style="font-size:1rem;padding:0.5rem 1rem;">
+                    {{ consultation.consultation_status }}
+                </span>
+            </div>
+
+            <!-- Consultation Details Card -->
+            <div class="card mb-4"
+                 style="border-radius:15px;border:2px solid #e5e7eb;
+                        background:linear-gradient(135deg,
+                        rgba(59,130,246,0.03),
+                        rgba(99,102,241,0.03));">
+                <div class="card-body p-4">
+                    <h4 class="mb-3"
+                        style="color:#1f2937;font-weight:700;">
+                        <i class="fas fa-info-circle me-2"
+                           style="color:#3b82f6;"></i>
+                        Consultation Information
+                    </h4>
+                    
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-paw me-2"
+                                   style="color:#6366f1;width:20px;"></i>
+                                <strong>Animal Type:</strong>
+                            </div>
+                            <p class="ms-4 mb-0"
+                               style="color:#4b5563;font-size:1.05rem;">
+                                {% if consultation.animal %}
+                                    {{ consultation.animal.animal_type }}
+                                {% else %}
+                                    {{ consultation.animal_type }}
+                                {% endif %}
+                            </p>
+                        </div>
+                        
+                        {% if consultation.animal %}
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-map-marker-alt me-2"
+                                   style="color:#ef4444;width:20px;"></i>
+                                <strong>Location:</strong>
+                            </div>
+                            <p class="ms-4 mb-0"
+                               style="color:#4b5563;font-size:1.05rem;">
+                                {{ consultation.animal.location|truncatewords:15 }}
+                            </p>
+                        </div>
+                        {% else %}
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-info-circle me-2"
+                                   style="color:#6366f1;width:20px;"></i>
+                                <strong>Animal Description:</strong>
+                            </div>
+                            <p class="ms-4 mb-0"
+                               style="color:#4b5563;font-size:1.05rem;">
+                                {{ consultation.animal_description }}
+                            </p>
+                        </div>
+                        {% endif %}
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-{% if consultation.requested_by.user_type == 'care_center' %}hospital{% else %}user{% endif %} me-2" 
+                                   style="color:#10b981;width:20px;"></i>
+                                <strong>Requested By:</strong>
+                            </div>
+                            <p class="ms-4 mb-0"
+                               style="color:#4b5563;font-size:1.05rem;">
+                                {% if consultation.requested_by.user_type == 'care_center' %}
+                                    {{ consultation.requested_by.care_center_name }}
+                                    <span class="badge bg-success ms-1"
+                                          style="font-size:0.75rem;">
+                                        Care Center
+                                    </span>
+                                {% else %}
+                                    {{ consultation.requested_by.username }}
+                                    <span class="badge bg-primary ms-1"
+                                          style="font-size:0.75rem;">
+                                        User
+                                    </span>
+                                {% endif %}
+                            </p>
+                        </div>
+                        
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-calendar me-2"
+                                   style="color:#f59e0b;width:20px;"></i>
+                                <strong>Requested Date:</strong>
+                            </div>
+                            <p class="ms-4 mb-0"
+                               style="color:#4b5563;font-size:1.05rem;">
+                                {{ consultation.requested_date|date:"M d, Y - g:i A" }}
+                            </p>
+                        </div>
+                        
+                        {% if consultation.animal %}
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-heartbeat me-2"
+                                   style="color:#ec4899;width:20px;"></i>
+                                <strong>Animal Status:</strong>
+                            </div>
+                            <p class="ms-4 mb-0">
+                                <span class="badge bg-info"
+                                      style="font-size:0.95rem;padding:0.4rem 0.8rem;">
+                                    {{ consultation.animal.status }}
+                                </span>
+                            </p>
+                        </div>
+                        {% endif %}
+                        
+                        {% if consultation.completed_date %}
+                        <div class="col-md-6 mb-3">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fas fa-check-circle me-2"
+                                   style="color:#10b981;width:20px;"></i>
+                                <strong>Completed Date:</strong>
+                            </div>
+                            <p class="ms-4 mb-0"
+                               style="color:#4b5563;font-size:1.05rem;">
+                                {{ consultation.completed_date|date:"M d, Y - g:i A" }}
+                            </p>
+                        </div>
+                        {% endif %}
+                    </div>
+                    
+                    <hr style="border-color:#e5e7eb;margin:1.5rem 0;">
+                    
+                    <!-- CONSULTATION REQUEST DESCRIPTION -->
+                    <div>
+                        <div class="d-flex align-items-center mb-3">
+                            <i class="fas fa-file-medical me-2"
+                               style="color:#8b5cf6;font-size:1.2rem;"></i>
+                            <strong style="font-size:1.1rem;color:#374151;">
+                                {% if consultation.requested_by.user_type == 'care_center' %}
+                                    Care Center's Consultation Request:
+                                {% else %}
+                                    User's Consultation Request:
+                                {% endif %}
+                            </strong>
+                        </div>
+                        <div class="ms-4 p-4"
+                             style="background:rgba(139,92,246,0.08);
+                                    border-radius:12px;
+                                    border-left:4px solid #8b5cf6;
+                                    box-shadow:0 2px 8px rgba(139,92,246,0.1);">
+                            <p class="mb-0"
+                               style="color:#374151;
+                                      line-height:1.8;
+                                      font-size:1.05rem;
+                                      white-space:pre-wrap;">{{ consultation.request_description }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- After the consultation request description section, ADD: -->
+
+{% if consultation.animal and consultation.animal.reported_image %}
+<hr style="border-color:#e5e7eb;margin:1.5rem 0;">
+<div>
+    <div class="d-flex align-items-center mb-3">
+        <i class="fas fa-image me-2" style="color:#10b981;font-size:1.2rem;"></i>
+        <strong style="font-size:1.1rem;color:#374151;">Animal Photo:</strong>
+    </div>
+    <div class="text-center">
+        <img src="{{ consultation.animal.reported_image.url }}" 
+             alt="{{ consultation.animal.animal_type }}"
+             style="max-width:100%;max-height:400px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);cursor:pointer;"
+             onclick="window.open('{{ consultation.animal.reported_image.url }}', '_blank')">
+        <p class="text-muted mt-2"><small>Click image to view full size</small></p>
+    </div>
+</div>
+{% elif consultation.consultation_image %}
+<hr style="border-color:#e5e7eb;margin:1.5rem 0;">
+<div>
+    <div class="d-flex align-items-center mb-3">
+        <i class="fas fa-image me-2" style="color:#10b981;font-size:1.2rem;"></i>
+        <strong style="font-size:1.1rem;color:#374151;">Animal Photo:</strong>
+    </div>
+    <div class="text-center">
+        <img src="{{ consultation.consultation_image.url }}" 
+             alt="{{ consultation.animal_type }}"
+             style="max-width:100%;max-height:400px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.1);cursor:pointer;"
+             onclick="window.open('{{ consultation.consultation_image.url }}', '_blank')">
+        <p class="text-muted mt-2"><small>Click image to view full size</small></p>
+    </div>
+</div>
+{% endif %}
+
+            <!-- Treatment Form -->
+            <form method="POST">
+                {% csrf_token %}
+                
+                <div class="mb-4">
+                    <label class="form-label"
+                           style="font-size:1.1rem;font-weight:700;color:#1f2937;">
+                        <i class="fas fa-notes-medical me-2"
+                           style="color:#3b82f6;"></i>
+                        Treatment Details *
+                    </label>
+                    {{ form.treatment_details }}
+                    <small class="text-muted d-block mt-2">
+                        <i class="fas fa-info-circle me-1"></i>
+                        Describe diagnosis, medications prescribed, procedures performed, and follow-up instructions
+                    </small>
+                    {% if form.treatment_details.errors %}
+                        <div class="text-danger mt-2">
+                            {{ form.treatment_details.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label"
+                           style="font-size:1.1rem;font-weight:700;color:#1f2937;">
+                        <i class="fas fa-clipboard-check me-2"
+                           style="color:#10b981;"></i>
+                        Consultation Status *
+                    </label>
+                    {{ form.consultation_status }}
+                    <small class="text-muted d-block mt-2">
+                        <i class="fas fa-info-circle me-1"></i>
+                        {% if consultation.animal %}
+                            Mark as "Completed" when treatment is finished. This will update the animal's status to "Healthy"
+                        {% else %}
+                            Mark as "Completed" when you have provided your consultation advice to the user
+                        {% endif %}
+                    </small>
+                    {% if form.consultation_status.errors %}
+                        <div class="text-danger mt-2">
+                            {{ form.consultation_status.errors }}
+                        </div>
+                    {% endif %}
+                </div>
+                
+                <div class="alert alert-info"
+                     style="border-radius:12px;border-left:4px solid #3b82f6;">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    <strong>Note:</strong> 
+                    {% if consultation.animal %}
+                        Once you mark this consultation as "Completed", the animal will automatically be marked as "Healthy" and will be available for adoption.
+                    {% else %}
+                        Once you mark this consultation as "Completed", the user will be notified that you have provided your medical advice.
+                    {% endif %}
+                </div>
+                
+                <div class="d-grid gap-3 mt-4">
+                    <button type="submit"
+                            class="btn btn-custom btn-success-custom btn-lg"
+                            style="font-size:1.1rem;">
+                        <i class="fas fa-save me-2"></i>
+                        Save Treatment Details
+                    </button>
+                    <button type="button"
+                            onclick="goBackSafe()"
+                            class="btn btn-custom btn-lg"
+                            style="background:#e5e7eb;color:#4b5563;font-weight:600;">
+                        <i class="fas fa-arrow-left me-2"></i>
+                        Back to Dashboard
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

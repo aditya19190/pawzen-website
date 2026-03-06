@@ -1,0 +1,104 @@
+{% extends 'base.html' %}
+
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb Navigation -->
+<nav class="breadcrumb-nav">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="{% url 'home' %}">
+                    <i class="fas fa-home me-1"></i>Home
+                </a>
+            </li>
+            <li class="breadcrumb-item active">Care Center Dashboard</li>
+        </ol>
+    </div>
+</nav>
+
+<div class="content-card">
+    <h2 class="mb-4">
+        <i class="fas fa-user-shield text-warning"></i> Admin Dashboard
+    </h2>
+    <p class="lead">System Overview and Management</p>
+</div>
+
+<!-- Statistics -->
+<div class="row mb-4">
+    <div class="col-md-3">
+        <div class="stat-card text-center">
+            <i class="fas fa-users fa-3x text-primary mb-3"></i>
+            <h3>{{ total_users }}</h3>
+            <p>Total Users</p>
+            <a href="{% url 'admin_view_users' %}" class="btn btn-sm btn-primary">View All</a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card text-center" style="border-left-color: #27ae60;">
+            <i class="fas fa-hospital fa-3x text-success mb-3"></i>
+            <h3>{{ total_care_centers }}</h3>
+            <p>Care Centers</p>
+            <a href="{% url 'admin_view_care_centers' %}" class="btn btn-sm btn-success">View All</a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card text-center" style="border-left-color: #16a085;">
+            <i class="fas fa-user-md fa-3x text-info mb-3"></i>
+            <h3>{{ total_veterinarians }}</h3>
+            <p>Veterinarians</p>
+            <a href="{% url 'admin_view_veterinarians' %}" class="btn btn-sm btn-info">View All</a>
+        </div>
+    </div>
+    <div class="col-md-3">
+        <div class="stat-card text-center" style="border-left-color: #f39c12;">
+            <i class="fas fa-paw fa-3x text-warning mb-3"></i>
+            <h3>{{ total_reported_animals }}</h3>
+            <p>Reported Animals</p>
+        </div>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-md-6">
+        <div class="stat-card text-center" style="border-left-color: #e74c3c;">
+            <i class="fas fa-heart fa-3x text-danger mb-3"></i>
+            <h3>{{ total_adoptions }}</h3>
+            <p>Successful Adoptions</p>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="stat-card text-center" style="border-left-color: #9b59b6;">
+            <i class="fas fa-chart-line fa-3x mb-3" style="color: #9b59b6;"></i>
+            <h3>Active</h3>
+            <p>System Status</p>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="content-card mt-4">
+    <h3 class="mb-3">Quick Actions</h3>
+    <div class="row">
+        <div class="col-md-4 mb-3">
+            <a href="{% url 'admin_view_users' %}" class="btn btn-primary w-100 py-3">
+                <i class="fas fa-users fa-2x d-block mb-2"></i>
+                Manage Users
+            </a>
+        </div>
+        <div class="col-md-4 mb-3">
+            <a href="{% url 'admin_view_care_centers' %}" class="btn btn-success w-100 py-3">
+                <i class="fas fa-hospital fa-2x d-block mb-2"></i>
+                Manage Care Centers
+            </a>
+        </div>
+        <div class="col-md-4 mb-3">
+            <a href="{% url 'admin_view_veterinarians' %}" class="btn btn-info w-100 py-3">
+                <i class="fas fa-user-md fa-2x d-block mb-2"></i>
+                Manage Veterinarians
+            </a>
+        </div>
+    </div>
+</div>
+{% endblock %}

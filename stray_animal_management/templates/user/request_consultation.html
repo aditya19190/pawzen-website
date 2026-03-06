@@ -1,0 +1,120 @@
+{% extends 'base.html' %}
+
+{% block title %}Request Veterinary Consultation{% endblock %}
+
+{% block content %}
+
+<nav class="breadcrumb-nav">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Request Consultation</li>
+        </ol>
+    </div>
+</nav>
+
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <div class="content-card">
+            <h2 class="mb-4">
+                <i class="fas fa-stethoscope me-2" style="color:#3b82f6;"></i>
+                Request Veterinary Consultation
+            </h2>
+            
+            <p class="text-muted mb-4">
+                Get professional veterinary advice for your animal or any animal you want to help.
+            </p>
+
+            <form method="POST" enctype="multipart/form-data">
+                {% csrf_token %}
+                
+                <div class="mb-4">
+                    <label class="form-label">
+                        <i class="fas fa-paw me-2"></i>Animal Type *
+                    </label>
+                    <select name="animal_type" class="form-select" required>
+                        <option value="">Select Animal Type</option>
+                        <option value="Dog">Dog</option>
+                        <option value="Cat">Cat</option>
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label">
+                        <i class="fas fa-info-circle me-2"></i>Animal Description *
+                    </label>
+                    <textarea name="animal_description" 
+                              class="form-control" 
+                              rows="3" 
+                              placeholder="Describe the animal (breed, size, color, age estimate, etc.)"
+                              required></textarea>
+                    <small class="text-muted">Provide details to help the veterinarian understand the animal</small>
+                </div>
+                
+                <!-- ADD THIS IMAGE SECTION -->
+                <div class="mb-4">
+                    <label class="form-label">
+                        <i class="fas fa-camera me-2"></i>Animal Photo (Optional)
+                    </label>
+                    <input type="file" 
+                           name="consultation_image" 
+                           class="form-control" 
+                           accept="image/*">
+                    <small class="text-muted">
+                        <i class="fas fa-lightbulb me-1"></i>
+                        Upload a photo to help the veterinarian assess the condition
+                    </small>
+                </div>
+                <!-- END IMAGE SECTION -->
+                
+                <div class="mb-4">
+                    <label class="form-label">
+                        <i class="fas fa-user-md me-2"></i>Select Veterinarian *
+                    </label>
+                    <select name="veterinarian" class="form-select" required>
+                        <option value="">Choose a veterinarian</option>
+                        {% for vet in veterinarians %}
+                        <option value="{{ vet.id }}">
+                            Dr. {{ vet.veterinarian_name }} - {{ vet.specialization }}
+                        </option>
+                        {% endfor %}
+                    </select>
+                </div>
+                
+                <div class="mb-4">
+                    <label class="form-label">
+                        <i class="fas fa-comment-medical me-2"></i>Consultation Request *
+                    </label>
+                    <textarea name="request_description" 
+                              class="form-control" 
+                              rows="5" 
+                              placeholder="Describe the medical concern, symptoms, or questions you have..."
+                              required></textarea>
+                    <small class="text-muted">
+                        Be specific about symptoms, behavior, injuries, or health concerns
+                    </small>
+                </div>
+
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle me-2"></i>
+                    <strong>Note:</strong> The veterinarian will review your request and provide advice. 
+                    For emergencies, please contact a veterinary clinic directly.
+                </div>
+                
+                <div class="d-grid gap-2 mt-4">
+                    <button type="submit" class="btn btn-custom btn-lg"
+                            style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;">
+                        <i class="fas fa-paper-plane me-2"></i>Submit Consultation Request
+                    </button>
+                    <button type="button" onclick="goBackSafe()" 
+                            class="btn btn-custom btn-lg"
+                            style="background:#e5e7eb;color:#4b5563;">
+                        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

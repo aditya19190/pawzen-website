@@ -1,0 +1,317 @@
+{% extends 'base.html' %}
+
+{% block title %}Veterinarian Dashboard - PawZen{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb Navigation -->
+<nav class="breadcrumb-nav">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active">
+                <i class="fas fa-th-large me-1"></i>Veterinarian Dashboard
+            </li>
+        </ol>
+    </div>
+</nav>
+
+<!-- Welcome Card -->
+<div class="content-card fade-in-up">
+    <h2 class="mb-2">
+        <i class="fas fa-user-md me-2" style="color:#3b82f6;"></i>
+        Welcome, Dr. {{ user.veterinarian_name }}!
+    </h2>
+    <p class="lead mb-1">
+        District:
+        <span class="badge"
+              style="background:linear-gradient(135deg,#3b82f6,#2563eb);
+                     font-size:1rem;padding:0.5rem 1rem;">
+            {{ user.district }}
+        </span>
+    </p>
+    <p style="color:#6b7280;">
+        <strong>Specialization:</strong> {{ user.specialization }} | 
+        <strong>Registration:</strong> {{ user.registration_number }}
+    </p>
+</div>
+
+<!-- Quick Stats -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="stat-card text-center"
+             style="border-left-color:#6366f1;">
+            <h3 style="color:#6366f1;font-weight:700;">
+                {{ all_consultations.count }}
+            </h3>
+            <p style="color:#6b7280;margin:0;">Total Consultations</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card text-center"
+             style="border-left-color:#f59e0b;">
+            <h3 style="color:#f59e0b;font-weight:700;">
+                {{ pending_requests.count }}
+            </h3>
+            <p style="color:#6b7280;margin:0;">Pending Requests</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card text-center"
+             style="border-left-color:#10b981;">
+            <h3 style="color:#10b981;font-weight:700;">
+                {{ completed_requests.count }}
+            </h3>
+            <p style="color:#6b7280;margin:0;">Completed</p>
+        </div>
+    </div>
+</div>
+
+<!-- Filter Buttons -->
+<div class="content-card mb-4">
+    <h3 class="mb-3">
+        <i class="fas fa-filter me-2" style="color:#6366f1;"></i>
+        Filter Consultations
+    </h3>
+    <div class="btn-group w-100" role="group">
+        <button type="button" 
+                class="btn btn-custom btn-lg"
+                style="background:linear-gradient(135deg,#6366f1,#8b5cf6);color:white;"
+                onclick="showTable('all')">
+            <i class="fas fa-list me-2"></i>All Requests
+        </button>
+        <button type="button" 
+                class="btn btn-custom btn-lg"
+                style="background:linear-gradient(135deg,#f59e0b,#d97706);color:white;"
+                onclick="showTable('pending')">
+            <i class="fas fa-clock me-2"></i>Pending ({{ pending_requests.count }})
+        </button>
+        <button type="button" 
+                class="btn btn-custom btn-lg"
+                style="background:linear-gradient(135deg,#10b981,#059669);color:white;"
+                onclick="showTable('completed')">
+            <i class="fas fa-check-circle me-2"></i>Completed ({{ completed_requests.count }})
+        </button>
+    </div>
+</div>
+
+<!-- Consultation Tables -->
+<div class="content-card">
+    <h3 class="mb-4">
+        <i class="fas fa-stethoscope me-2" style="color:#3b82f6;"></i>
+        Consultation Requests
+    </h3>
+
+    <!-- All Consultations Table -->
+    <div id="allTable" class="table-responsive">
+        {% if all_consultations %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Animal</th>
+                    <th>Requested By</th>
+                    <th>Request Preview</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for consultation in all_consultations %}
+                <tr>
+                    <td>
+                        {% if consultation.animal %}
+                            {{ consultation.animal.animal_type }}
+                            <br><small class="text-muted">Reported Animal</small>
+                        {% else %}
+                            {{ consultation.animal_type }}
+                            <br><small class="text-muted">{{ consultation.animal_description|truncatewords:8 }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if consultation.requested_by.user_type == 'care_center' %}
+                            {{ consultation.requested_by.care_center_name }}
+                            <br><small class="text-muted">Care Center</small>
+                        {% else %}
+                            {{ consultation.requested_by.username }}
+                            <br><small class="text-muted">User</small>
+                        {% endif %}
+                    </td>
+                    <td>{{ consultation.requested_date|date:"M d, Y" }}</td>
+                    <td>
+                        {% if consultation.consultation_status == 'Pending' %}
+                            <span class="badge bg-warning">Pending</span>
+                        {% else %}
+                            <span class="badge bg-success">Completed</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a href="{% url 'provide_treatment' consultation.id %}" 
+                           class="btn btn-sm btn-custom"
+                           style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;">
+                            {% if consultation.consultation_status == 'Pending' %}
+                                <i class="fas fa-stethoscope me-1"></i>Provide Treatment
+                            {% else %}
+                                <i class="fas fa-eye me-1"></i>View Details
+                            {% endif %}
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>No consultation requests yet.
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Pending Table -->
+    <div id="pendingTable" class="table-responsive" style="display:none;">
+        {% if pending_requests %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Animal</th>
+                    <th>Requested By</th>
+                    <th>Request Preview</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for consultation in pending_requests %}
+                <tr style="background:rgba(245,158,11,0.05);">
+                    <td>
+                        {% if consultation.animal %}
+                            {{ consultation.animal.animal_type }}
+                            <br><small class="text-muted">Reported Animal</small>
+                        {% else %}
+                            {{ consultation.animal_type }}
+                            <br><small class="text-muted">{{ consultation.animal_description|truncatewords:8 }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if consultation.requested_by.user_type == 'care_center' %}
+                            {{ consultation.requested_by.care_center_name }}
+                            <br><small class="text-muted">Care Center</small>
+                        {% else %}
+                            {{ consultation.requested_by.username }}
+                            <br><small class="text-muted">User</small>
+                        {% endif %}
+                    </td>
+                    <td>{{ consultation.requested_date|date:"M d, Y" }}</td>
+                    <td>
+                        <span class="badge bg-warning">Pending</span>
+                    </td>
+                    <td>
+                        <a href="{% url 'provide_treatment' consultation.id %}" 
+                           class="btn btn-sm btn-custom"
+                           style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;">
+                            <i class="fas fa-stethoscope me-1"></i>Provide Treatment
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>No pending consultation requests.
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Completed Table -->
+    <div id="completedTable" class="table-responsive" style="display:none;">
+        {% if completed_requests %}
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Animal</th>
+                    <th>Requested By</th>
+                    <th>Request Preview</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for consultation in completed_requests %}
+                <tr style="background:rgba(16,185,129,0.05);">
+                    <td>
+                        {% if consultation.animal %}
+                            {{ consultation.animal.animal_type }}
+                            <br><small class="text-muted">Reported Animal</small>
+                        {% else %}
+                            {{ consultation.animal_type }}
+                            <br><small class="text-muted">{{ consultation.animal_description|truncatewords:8 }}</small>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if consultation.requested_by.user_type == 'care_center' %}
+                            {{ consultation.requested_by.care_center_name }}
+                            <br><small class="text-muted">Care Center</small>
+                        {% else %}
+                            {{ consultation.requested_by.username }}
+                            <br><small class="text-muted">User</small>
+                        {% endif %}
+                    </td>
+                    <td>{{ consultation.requested_date|date:"M d, Y" }}</td>
+                    <td>
+                        <span class="badge bg-success">Completed</span>
+                    </td>
+                    <td>
+                        <a href="{% url 'provide_treatment' consultation.id %}" 
+                           class="btn btn-sm btn-custom"
+                           style="background:linear-gradient(135deg,#10b981,#059669);color:white;">
+                            <i class="fas fa-eye me-1"></i>View Details
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>No completed consultations yet.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Account Settings -->
+<div class="content-card mt-4">
+    <h3 class="mb-3">
+        <i class="fas fa-cog me-2" style="color:#6366f1;"></i>
+        Account Settings
+    </h3>
+    <a href="{% url 'delete_veterinarian_account' %}" 
+       class="btn btn-custom btn-danger-custom"
+       onclick="return confirm('Are you sure you want to delete your account? This action cannot be undone.');">
+        <i class="fas fa-trash me-2"></i>Delete Account
+    </a>
+</div>
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+function showTable(tableType) {
+    // Hide all tables
+    document.getElementById('allTable').style.display = 'none';
+    document.getElementById('pendingTable').style.display = 'none';
+    document.getElementById('completedTable').style.display = 'none';
+    
+    // Show selected table
+    if (tableType === 'all') {
+        document.getElementById('allTable').style.display = 'block';
+    } else if (tableType === 'pending') {
+        document.getElementById('pendingTable').style.display = 'block';
+    } else if (tableType === 'completed') {
+        document.getElementById('completedTable').style.display = 'block';
+    }
+}
+</script>
+{% endblock %}

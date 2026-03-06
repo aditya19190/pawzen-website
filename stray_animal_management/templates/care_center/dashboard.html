@@ -1,0 +1,307 @@
+{% extends 'base.html' %}
+
+{% block title %}Care Center Dashboard - PawZen{% endblock %}
+
+{% block content %}
+
+<!-- Breadcrumb Navigation -->
+<nav class="breadcrumb-nav">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active">
+                <i class="fas fa-th-large me-1"></i>Care Center Dashboard
+            </li>
+        </ol>
+    </div>
+</nav>
+
+<div class="content-card fade-in-up">
+    <h2 class="mb-2">
+        <i class="fas fa-hospital me-2" style="color:#10b981;"></i>
+        {{ user.care_center_name }}
+    </h2>
+    <p class="lead mb-1">
+        District:
+        <span class="badge"
+              style="background:linear-gradient(135deg,#10b981,#059669);">
+            {{ user.district }}
+        </span>
+    </p>
+    <p style="color:#6b7280;">
+        <strong>License:</strong> {{ user.license_number }}
+    </p>
+</div>
+
+<!-- Quick Stats -->
+<div class="row mb-4">
+    <div class="col-md-4">
+        <div class="stat-card text-center"
+             style="border-left-color:#f59e0b;">
+            <h3 style="color:#f59e0b;font-weight:700;">
+                {{ reported_animals.count }}
+            </h3>
+            <p style="color:#6b7280;margin:0;">New Reports</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card text-center"
+             style="border-left-color:#10b981;">
+            <h3 style="color:#10b981;font-weight:700;">
+                {{ taken_animals.count }}
+            </h3>
+            <p style="color:#6b7280;margin:0;">Under Care</p>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="stat-card text-center"
+             style="border-left-color:#3b82f6;">
+            <h3 style="color:#3b82f6;font-weight:700;">
+                {{ consultation_requests.count }}
+            </h3>
+            <p style="color:#6b7280;margin:0;">Consultations</p>
+        </div>
+    </div>
+</div>
+
+
+<!-- New Reported Animals -->
+<div class="content-card mb-4" id="reported">
+    <h3 class="mb-3">
+        <i class="fas fa-exclamation-triangle me-2" style="color:#f59e0b;"></i>
+        New Reported Animals
+        <button class="btn btn-sm btn-outline-primary float-end" type="button" 
+                data-bs-toggle="collapse" data-bs-target="#reportedCollapse">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+    </h3>
+
+    <div class="collapse show" id="reportedCollapse">
+        {% if reported_animals %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Type</th>
+                        <th>Location</th>
+                        <th>Description</th>
+                        <th>Reporter</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for animal in reported_animals %}
+                    <tr>
+                        <td>
+                            {% if animal.reported_image %}
+                                <img src="{{ animal.reported_image.url }}" 
+                                     alt="{{ animal.animal_type }}"
+                                     style="width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1);"
+                                     onclick="window.open('{{ animal.reported_image.url }}', '_blank')"
+                                     title="Click to view full size">
+                            {% else %}
+                                <div style="width:60px;height:60px;background:#e5e7eb;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                                    <i class="fas fa-paw" style="color:#9ca3af;"></i>
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td><i class="fas fa-{% if animal.animal_type == 'Dog' %}dog{% else %}cat{% endif %} me-1"></i>{{ animal.animal_type }}</td>
+                        <td>{{ animal.location|truncatewords:8 }}</td>
+                        <td>{{ animal.description|truncatewords:10 }}</td>
+                        <td>{{ animal.reporter.username }}</td>
+                        <td>{{ animal.reported_date|date:"M d, Y" }}</td>
+                        <td>
+                            <a href="{% url 'take_animal' animal.id %}" class="btn btn-sm btn-custom btn-success-custom">
+                                <i class="fas fa-hand-holding-medical me-1"></i>Take Animal
+                            </a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>No new reported animals.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Animals Under Your Care -->
+<div class="content-card mb-4" id="taken">
+    <h3 class="mb-3">
+        <i class="fas fa-heartbeat me-2" style="color:#10b981;"></i>
+        Animals Under Your Care
+        <button class="btn btn-sm btn-outline-primary float-end" type="button" 
+                data-bs-toggle="collapse" data-bs-target="#takenCollapse">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+    </h3>
+
+    <div class="collapse" id="takenCollapse">
+        {% if taken_animals %}
+        <div class="table-responsive">
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th>Photo</th>
+                        <th>Type</th>
+                        <th>Location</th>
+                        <th>Status</th>
+                        <th>Date</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for animal in taken_animals %}
+                    <tr>
+                        <td>
+                            {% if animal.status == 'Healthy' and animal.healthy_image %}
+                                <img src="{{ animal.healthy_image.url }}" 
+                                     alt="Healthy {{ animal.animal_type }}"
+                                     style="width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1);border:2px solid #10b981;"
+                                     onclick="window.open('{{ animal.healthy_image.url }}', '_blank')"
+                                     title="Healthy photo - Click to view">
+                            {% elif animal.reported_image %}
+                                <img src="{{ animal.reported_image.url }}" 
+                                     alt="{{ animal.animal_type }}"
+                                     style="width:60px;height:60px;object-fit:cover;border-radius:8px;cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,0.1);"
+                                     onclick="window.open('{{ animal.reported_image.url }}', '_blank')"
+                                     title="Click to view full size">
+                            {% else %}
+                                <div style="width:60px;height:60px;background:#e5e7eb;border-radius:8px;display:flex;align-items:center;justify-content:center;">
+                                    <i class="fas fa-paw" style="color:#9ca3af;"></i>
+                                </div>
+                            {% endif %}
+                        </td>
+                        <td>{{ animal.animal_type }}</td>
+                        <td>{{ animal.location|truncatewords:8 }}</td>
+                        <td>
+                            {% if animal.status == 'Under Care' %}
+                            <span class="badge bg-info">Not Treated</span>
+                            {% else %}
+                            <span class="badge bg-success">Healthy</span>
+                            {% endif %}
+                        </td>
+                        <td>{{ animal.updated_at|date:"M d, Y" }}</td>
+                        <td>
+                            {% if animal.status == 'Under Care' %}
+                                <a href="{% url 'request_consultation_care_center' animal.id %}" 
+                                   class="btn btn-sm btn-custom" 
+                                   style="background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;">
+                                    <i class="fas fa-stethoscope me-1"></i>Request Vet
+                                </a>
+                            {% elif animal.status == 'Healthy' and not animal.healthy_image %}
+                                <a href="{% url 'upload_healthy_image' animal.id %}" 
+                                   class="btn btn-sm btn-custom"
+                                   style="background:linear-gradient(135deg,#10b981,#059669);color:white;">
+                                    <i class="fas fa-camera me-1"></i>Upload Photo
+                                </a>
+                            {% else %}
+                                <span class="text-success">
+                                    <i class="fas fa-check-circle me-1"></i>Ready for Adoption
+                                </span>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+        {% else %}
+        <div class="alert alert-info">
+            <i class="fas fa-info-circle me-2"></i>No animals under your care yet.
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Consultations -->
+<div class="content-card mb-4" id="consultations">
+    <h3 class="mb-3">
+        <i class="fas fa-stethoscope me-2" style="color:#3b82f6;"></i>
+        Veterinary Consultations
+        <button class="btn btn-sm btn-outline-primary float-end"
+                type="button"
+                data-bs-toggle="collapse"
+                data-bs-target="#consultationsCollapse">
+            <i class="fas fa-chevron-down"></i>
+        </button>
+    </h3>
+
+    <div class="collapse" id="consultationsCollapse">
+        {% if consultation_requests %}
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Animal</th>
+                            <th>Veterinarian</th>
+                            <th>Status</th>
+                            <th>Treatment Details</th>
+                            <th>Requested Date</th>
+                            <th>Completed Date</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for consultation in consultation_requests %}
+                        <tr>
+                            <td>
+                                {% if consultation.animal %}
+                                    {{ consultation.animal.animal_type }}
+                                {% else %}
+                                    {{ consultation.animal_type }}
+                                {% endif %}
+                            </td>
+                            <td>Dr. {{ consultation.veterinarian.veterinarian_name }}</td>
+                            <td>
+                                {% if consultation.consultation_status == 'Pending' %}
+                                    <span class="badge bg-warning">Pending</span>
+                                {% else %}
+                                    <span class="badge bg-success">Treated</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if consultation.treatment_details %}
+                                    {{ consultation.treatment_details|truncatewords:15 }}
+                                {% else %}
+                                    <span class="text-muted">Awaiting treatment</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ consultation.requested_date|date:"M d, Y" }}</td>
+                            <td>
+                                {% if consultation.completed_date %}
+                                    {{ consultation.completed_date|date:"M d, Y" }}
+                                {% else %}
+                                    <span class="text-muted">-</span>
+                                {% endif %}
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="alert alert-info">
+                <i class="fas fa-info-circle me-2"></i>
+                No consultation requests yet.
+            </div>
+        {% endif %}
+    </div>
+</div>
+
+<!-- Account Settings -->
+<div class="content-card">
+    <h3 class="mb-3">
+        <i class="fas fa-cog me-2" style="color:#6366f1;"></i>
+        Account Settings
+    </h3>
+    <a href="{% url 'delete_care_center_account' %}"
+       class="btn btn-custom btn-danger-custom">
+        <i class="fas fa-trash me-2"></i>Delete Account
+    </a>
+</div>
+
+{% endblock %}

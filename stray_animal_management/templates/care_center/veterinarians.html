@@ -1,0 +1,43 @@
+{% extends 'base.html' %}
+
+{% block title %}Veterinarians{% endblock %}
+
+{% block content %}
+<div class="content-card">
+    <h2 class="mb-4">
+        <i class="fas fa-user-md text-info"></i> Veterinarians in {{ user.district }}
+    </h2>
+    
+    {% if veterinarians %}
+        <div class="row">
+            {% for vet in veterinarians %}
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-body">
+                        <h5 class="card-title">
+                            <i class="fas fa-user-md"></i> Dr. {{ vet.veterinarian_name }}
+                        </h5>
+                        <p class="card-text">
+                            <strong>Qualification:</strong> {{ vet.qualification }}<br>
+                            <strong>Specialization:</strong> {{ vet.specialization }}<br>
+                            <strong>Registration No:</strong> {{ vet.registration_number }}<br>
+                            <strong>Phone:</strong> {{ vet.phone }}<br>
+                            <strong>Email:</strong> {{ vet.email }}<br>
+                            <strong>District:</strong> <span class="badge bg-info">{{ vet.district }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="alert alert-warning">
+            No veterinarians available in your district.
+        </div>
+    {% endif %}
+    
+    <div class="mt-3">
+        <a href="{% url 'care_center_dashboard' %}" class="btn btn-secondary">Back to Dashboard</a>
+    </div>
+</div>
+{% endblock %}

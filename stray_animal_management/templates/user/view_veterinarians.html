@@ -1,0 +1,69 @@
+{% extends 'base.html' %}
+
+{% block title %}Veterinarians - PawZen{% endblock %}
+
+{% block content %}
+
+<nav class="breadcrumb-nav">
+    <div class="container">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'user_dashboard' %}">Dashboard</a></li>
+            <li class="breadcrumb-item active">Veterinarians</li>
+        </ol>
+    </div>
+</nav>
+
+<div class="content-card">
+    <h2 class="mb-4">
+        <i class="fas fa-user-md me-2" style="color:#3b82f6;"></i>
+        Veterinarians in {{ user.district }}
+    </h2>
+
+    {% if veterinarians %}
+    <div class="row">
+        {% for vet in veterinarians %}
+        <div class="col-md-6 mb-4">
+            <div class="card" style="border-radius:15px;border:2px solid #3b82f6;">
+                <div class="card-body">
+                    <h5 class="card-title">
+                        <i class="fas fa-user-md me-2" style="color:#3b82f6;"></i>
+                        Dr. {{ vet.veterinarian_name }}
+                    </h5>
+                    <hr>
+                    <p class="mb-2">
+                        <i class="fas fa-phone me-2" style="color:#6366f1;"></i>
+                        <strong>Phone:</strong> {{ vet.phone }}
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-envelope me-2" style="color:#ec4899;"></i>
+                        <strong>Email:</strong> {{ vet.email }}
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-graduation-cap me-2" style="color:#10b981;"></i>
+                        <strong>Qualification:</strong> {{ vet.qualification }}
+                    </p>
+                    <p class="mb-2">
+                        <i class="fas fa-stethoscope me-2" style="color:#f59e0b;"></i>
+                        <strong>Specialization:</strong> {{ vet.specialization }}
+                    </p>
+                    <p class="mb-0">
+                        <i class="fas fa-id-badge me-2" style="color:#8b5cf6;"></i>
+                        <strong>Registration:</strong> {{ vet.registration_number }}
+                    </p>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="alert alert-info">
+        <i class="fas fa-info-circle me-2"></i>No veterinarians found in your district.
+    </div>
+    {% endif %}
+
+    <button type="button" onclick="goBackSafe()" class="btn btn-custom btn-primary-custom">
+        <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+    </button>
+</div>
+
+{% endblock %}
